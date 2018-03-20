@@ -1,0 +1,71 @@
+input:
+    # scheme could be local or hdfs
+    scheme: local
+    local:
+        path: examples/weather.csv
+    #hdfs:
+    #   ip: 127.0.0.1
+    #   port: 50070
+    #   path: /fft.json
+
+  # format specifications
+    format:
+        type: dsv  # type could be dsv or json
+
+        dsv:  # Delimiter-separated values
+            # newline is automatically handled by DSV reader
+            delimiter: ','
+            # header: order is important, auto-discovering if not present. null to ignore column.
+            #header: [null,'Latitude','Longitude','Time of Observation']
+            strictParsing: True
+
+
+output:
+    # scheme could be local, hdfs or elasticsearch
+    scheme: local
+    local:
+        # json
+        path: examples/output_weather.json
+    #hdfs:
+    #    ip: 127.0.0.1
+    #    port: 50070
+    #    path: /out.json
+    #elasticsearch:
+    #    host: 127.0.0.1
+    #    port: 9200
+    #    index: ode
+
+
+# format specifications
+format:
+    # Define values that should be consider as empty value. null represents python None object
+    noneValues: ['', null, 'NA', 'N/A']
+
+
+converters:
+# See README.md for more information.
+
+  - inputName: "Time of Observation"
+    outputName: "timestamp"
+    inputType: "str"
+    outputType: "timestamp"
+    dateFormat: "%Y-%m-%dT%H:%M:%S"  # No support for timezone ATM
+    convertToEpoch: False
+
+  - inputName: "Latitude"
+    outputName: "latitude"
+    inputType: "str"
+    outputType: "latitude"
+    defaultValue: "N/A"
+
+  - inputName: "Longitude"
+    outputName: "longitude"
+    inputType: "str"
+    outputType: "longitude"
+    defaultValue: "N/A"
+
+  - inputName: "Wind Direction"
+    outputName: "wind_direction"
+    inputType: "str"
+    outputType: "int"
+    defaultValue: null
